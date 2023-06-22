@@ -3,11 +3,12 @@ import Header from "./component/Header.js";
 import TodoList from "./component/TodoList.js";
 import TodoForm from "./component/TodoForm.js"
 import { setTodosToStorage,getTodosFromStorage } from "./actions/todoAction.js";
+import generateUniqueId from "./static/generateId.js";
 
 export default class App extends Component{
   
   render(){
-    const {onsubmit, handleStorageChange} = this;
+    const {onsubmit, handleStorageChange, toggleButton, deleteTodo} = this;
     this.$target.innerHTML = 
     `
       <h1 class="header"></h1>
@@ -28,16 +29,40 @@ export default class App extends Component{
     });
 
     const todoList = new TodoList($todoList, getTodosFromStorage(), {
-      
+      toggleButton : toggleButton.bind(this),
+      deleteTodo : deleteTodo.bind(this),
     });
 
     this.todoList = todoList;
   }
 
   addTodo(text){
-    const newTodoList = ([...getTodosFromStorage(),text]);
+    const newTodoList = [...this.todoList.state, {text, isCompleted:false, id:generateUniqueId()}];
+    console.log(newTodoList);
     setTodosToStorage(newTodoList);
     this.todoList.setState(newTodoList);
+  }
+
+  deleteTodo(e){
+    const targetTodo = this.todoList.state.find(todo => todo.id === e.target.id)
+    if (targetTodo) {
+      targetTodo.isCompleted = !targetTodo.isCompleted 
+      console.log(this.todoList.state);
+    }
+    setTodosToStorage(this.todoList.state);
+    this.todoList.setState(this.todoList.state);
+    console.log("here");
+  }
+
+  toggleButton(e){
+    console.log(this.todoList.state);
+    const targetIndex = this.todoList.state.findIndex(todo => todo.id === e.target.id);
+    if (targetIndex !== -1) {
+      this.todoList.state.splice(targetIndex, 1);
+      console.log(this.todoList.state);
+    }
+    setTodosToStorage(this.todoList.state);
+    this.todoList.setState(this.todoList.state);
   }
 
 }

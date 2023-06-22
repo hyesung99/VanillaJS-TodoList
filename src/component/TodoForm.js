@@ -5,7 +5,7 @@ export default class TodoForm extends Component{
   render(){
     this.$target.innerHTML = 
     `
-      <input type="text" name="todo"/>
+      <input type="text" name="todoForm"/>
       <button>추가</button>
     `
   }
@@ -14,7 +14,7 @@ export default class TodoForm extends Component{
     const {onsubmit} = this.props
     this.$target.addEventListener('submit',e => {
       e.preventDefault();
-      const $todo = this.$target.querySelector('input[name=todo]');
+      const $todo = this.$target.querySelector('input[name=todoForm]');
       const text = $todo.value;
 
       if(text.length > 1){
