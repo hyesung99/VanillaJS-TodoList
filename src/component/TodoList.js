@@ -3,7 +3,6 @@ import Component from "./Component.js";
 export default class TodoList extends Component{
 
   render(){
-    console.log(this.state)
     this.$target.innerHTML =
     `
       <ul>
@@ -11,4 +10,5 @@ export default class TodoList extends Component{
       </ul>
     `
   }
+
 }

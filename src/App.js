@@ -22,7 +22,7 @@ export default class App extends Component{
     new Header( $header, null, {
       headerText : 'Simple todos'
     });
-
+    
     new TodoForm($todoForm, null, {
       onsubmit : this.addTodo.bind(this),
     });
@@ -39,4 +39,5 @@ export default class App extends Component{
     setTodosToStorage(newTodoList);
     this.todoList.setState(newTodoList);
   }
+
 }
