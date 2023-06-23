@@ -2,6 +2,7 @@ import Component from "./component/Component.js";
 import Header from "./component/Header.js";
 import TodoList from "./component/TodoList.js";
 import TodoForm from "./component/TodoForm.js"
+import TodoCount from "./component/TodoCount.js"
 import { setTodosToStorage,getTodosFromStorage } from "./actions/todoAction.js";
 import generateUniqueId from "./static/generateId.js";
 
@@ -14,11 +15,13 @@ export default class App extends Component{
       <h1 class="header"></h1>
       <form class="todoForm"></form>
       <div class="todoList"></div>
+      <div class="todoCount"></div>
     `
     
     const $header = this.$target.querySelector('.header');
     const $todoForm = this.$target.querySelector('.todoForm');
     const $todoList = this.$target.querySelector('.todoList');
+    const $todoCount = this.$target.querySelector('.todoCount');
 
     new Header( $header, null, {
       headerText : 'Simple todos'
@@ -28,12 +31,12 @@ export default class App extends Component{
       onsubmit : this.addTodo.bind(this),
     });
 
-    const todoList = new TodoList($todoList, getTodosFromStorage(), {
+    this.todoList = new TodoList($todoList, getTodosFromStorage(), {
       toggleButton : toggleButton.bind(this),
       deleteTodo : deleteTodo.bind(this),
     });
 
-    this.todoList = todoList;
+    this.todoCount = new TodoCount($todoCount, getTodosFromStorage(), {});
   }
 
   addTodo(text){
@@ -41,28 +44,31 @@ export default class App extends Component{
     console.log(newTodoList);
     setTodosToStorage(newTodoList);
     this.todoList.setState(newTodoList);
+    this.todoCount.setState(newTodoList);
   }
 
   deleteTodo(e){
     const targetTodo = this.todoList.state.find(todo => todo.id === e.target.id)
     if (targetTodo) {
       targetTodo.isCompleted = !targetTodo.isCompleted 
-      console.log(this.todoList.state);
     }
     setTodosToStorage(this.todoList.state);
     this.todoList.setState(this.todoList.state);
-    console.log("here");
+    this.updateTodoCount();
   }
-
+  
+  updateTodoCount(){
+    this.todoCount.setState(getTodosFromStorage());
+  }
+  
   toggleButton(e){
-    console.log(this.todoList.state);
     const targetIndex = this.todoList.state.findIndex(todo => todo.id === e.target.id);
     if (targetIndex !== -1) {
       this.todoList.state.splice(targetIndex, 1);
-      console.log(this.todoList.state);
     }
     setTodosToStorage(this.todoList.state);
     this.todoList.setState(this.todoList.state);
+    this.updateTodoCount();
   }
 
 }

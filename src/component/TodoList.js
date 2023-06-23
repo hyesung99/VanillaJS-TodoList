@@ -23,12 +23,12 @@ export default class TodoList extends Component{
           `).join('')}
       </ul>
     `
+    this.addEvent();
   }
 
   addEvent(){
     const toggleButtons = this.$target.querySelectorAll(".toggleButton");
     const {toggleButton} = this.props;
-    console.log(toggleButtons);
     toggleButtons.forEach((button) => {
       button.addEventListener('click', (e) =>{
         
@@ -38,7 +38,6 @@ export default class TodoList extends Component{
 
     const {deleteTodo} = this.props;
     const toggleTodo = this.$target.querySelectorAll(".todo")
-    console.log(toggleTodo);
     toggleTodo.forEach((todo) => {
       todo.addEventListener('click', (e) => {
         deleteTodo(e)
