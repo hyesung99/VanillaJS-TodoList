@@ -44,7 +44,7 @@ export default class App extends Component{
     console.log(newTodoList);
     setTodosToStorage(newTodoList);
     this.todoList.setState(newTodoList);
-    this.todoCount.setState(newTodoList);
+    this.updateTodoCount();
   }
 
   deleteTodo(e){
