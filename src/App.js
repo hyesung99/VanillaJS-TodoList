@@ -9,7 +9,7 @@ import generateUniqueId from "./static/generateId.js";
 export default class App extends Component{
   
   render(){
-    const {onsubmit, handleStorageChange, toggleButton, deleteTodo} = this;
+    const {onsubmit, handleStorageChange, toggleTodo, deleteTodo} = this;
     this.$target.innerHTML = 
     `
       <h1 class="header"></h1>
@@ -32,7 +32,7 @@ export default class App extends Component{
     });
 
     this.todoList = new TodoList($todoList, getTodosFromStorage(), {
-      toggleButton : toggleButton.bind(this),
+      toggleTodo : toggleTodo.bind(this),
       deleteTodo : deleteTodo.bind(this),
     });
 
@@ -47,8 +47,9 @@ export default class App extends Component{
     this.updateTodoCount();
   }
 
-  deleteTodo(e){
-    const targetTodo = this.todoList.state.find(todo => todo.id === e.target.id)
+  toggleTodo(id){
+    const targetTodo = this.todoList.state.find(todo => todo.id === id)
+
     if (targetTodo) {
       targetTodo.isCompleted = !targetTodo.isCompleted 
     }
@@ -60,9 +61,8 @@ export default class App extends Component{
   updateTodoCount(){
     this.todoCount.setState(getTodosFromStorage());
   }
-  
-  toggleButton(e){
-    const targetIndex = this.todoList.state.findIndex(todo => todo.id === e.target.id);
+  deleteTodo(id){
+    const targetIndex = this.todoList.state.findIndex(todo => todo.id === id);
     if (targetIndex !== -1) {
       this.todoList.state.splice(targetIndex, 1);
     }

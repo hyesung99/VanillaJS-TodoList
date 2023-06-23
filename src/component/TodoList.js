@@ -7,41 +7,28 @@ export default class TodoList extends Component{
     `
       <ul>
         ${this.state.map((todo) => 
-          todo.isCompleted ? 
-          `
-          <li id="${todo.id}" class="todo" style="text-decoration: line-through;">
-            ${todo.text}
-          </li>
-          <button id="${todo.id}" class="toggleButton">삭제</button>
-          `
-          :
+           
           `
           <li id="${todo.id}" class="todo">
-            ${todo.text}
+            <span>${todo.isCompleted ? `<del>${todo.text}</del>`:`${todo.text}`}</span>
+            <button  class="toggleButton">삭제</button>
           </li>
-          <button id="${todo.id}" class="toggleButton">삭제</button>
-          `).join('')}
+          `
+          ).join('')}
       </ul>
     `
-    this.addEvent();
   }
 
   addEvent(){
-    const toggleButtons = this.$target.querySelectorAll(".toggleButton");
-    const {toggleButton} = this.props;
-    toggleButtons.forEach((button) => {
-      button.addEventListener('click', (e) =>{
-        
-        toggleButton(e);
-      })
-    });
-
-    const {deleteTodo} = this.props;
-    const toggleTodo = this.$target.querySelectorAll(".todo")
-    toggleTodo.forEach((todo) => {
-      todo.addEventListener('click', (e) => {
-        deleteTodo(e)
-      })
+    const {toggleTodo, deleteTodo} = this.props;
+    
+    this.$target.addEventListener('click', ({target}) => {
+      if(target.closest("span")){
+        toggleTodo(target.closest(".todo").getAttribute('id'));
+      }
+      if(target.closest("button")){
+        deleteTodo(target.closest(".todo").getAttribute('id'));
+      }
     })
   }
 }
