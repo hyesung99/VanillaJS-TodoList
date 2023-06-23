@@ -38,6 +38,7 @@ export default class App extends Component{
 
   addTodo(text){
     const newTodoList = [...this.todoList.state, {text, isCompleted:false, id:generateUniqueId()}];
+    console.log(newTodoList);
     setTodosToStorage(newTodoList);
     this.todoList.setState(newTodoList);
     this.updateTodoCount();
