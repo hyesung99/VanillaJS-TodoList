@@ -1,10 +1,7 @@
 import Component from "./component/Component.js";
-import Header from "./component/Header.js";
-import TodoList from "./component/TodoList.js";
-import TodoForm from "./component/TodoForm.js"
-import TodoCount from "./component/TodoCount.js"
+import { Header, TodoForm, TodoList, TodoCount } from './component/index.js';
 import { setTodosToStorage,getTodosFromStorage } from "./actions/todoAction.js";
-import generateUniqueId from "./static/generateId.js";
+import generateUniqueId from "./utils/generateId.js";
 
 export default class App extends Component{
   
@@ -41,7 +38,6 @@ export default class App extends Component{
 
   addTodo(text){
     const newTodoList = [...this.todoList.state, {text, isCompleted:false, id:generateUniqueId()}];
-    console.log(newTodoList);
     setTodosToStorage(newTodoList);
     this.todoList.setState(newTodoList);
     this.updateTodoCount();
