@@ -3,7 +3,6 @@ import { getTodosFromStorage } from "../actions/todoAction.js";
 
 export default class TodoForm extends Component{
   render(){
-    console.log(this.state);
     const wholeCount = this.state.length;
     const completedCount = this.state.filter((todo) => todo.isCompleted === true).length
     this.$target.innerHTML = `
