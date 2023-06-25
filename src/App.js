@@ -4,47 +4,6 @@ import todoStorage from "./storage/todoStorage.js";
 import generateUniqueId from "./utils/generateId.js";
 
 export default class App extends Component{
-  
-  render(){
-    const {toggleTodo, deleteTodo, updateTodoCount, getTodosFromStorage, setTodosToStorage} = this;
-    this.$target.innerHTML = 
-    `
-      <h1 class="header"></h1>
-      <form class="todoForm"></form>
-      <div class="todoList"></div>
-      <div class="todoCount"></div>
-    `
-    
-    const $header = this.$target.querySelector('.header');
-    const $todoForm = this.$target.querySelector('.todoForm');
-    const $todoList = this.$target.querySelector('.todoList');
-    const $todoCount = this.$target.querySelector('.todoCount');
-
-    new Header({ 
-      $target : $header, 
-      initialState : "Simple Todo",
-    });
-    
-    new TodoForm({
-      $target : $todoForm, 
-      props : {
-        onsubmit : this.addTodo.bind(this),
-      }
-    });
-
-    this.todoList = new TodoList({
-      $target :$todoList, 
-      initialState: getTodosFromStorage(), 
-      props:{
-        toggleTodo : toggleTodo.bind(this),
-        deleteTodo : deleteTodo.bind(this),
-    }});
-
-    this.todoCount = new TodoCount({
-      $target : $todoCount, 
-      initialState : getTodosFromStorage(),
-    })
-  }
 
   addTodo(text){
     const newTodoList = [...this.todoList.state, {text, isCompleted:false, id:generateUniqueId()}];
@@ -93,5 +52,46 @@ export default class App extends Component{
     } catch {
       alert(`${e.message}\n local storage에 todo를 저장하는데 실패했습니다.`)
     }
+  }
+
+  render(){
+    const {toggleTodo, deleteTodo, getTodosFromStorage, setTodosToStorage} = this;
+    this.$target.innerHTML = 
+    `
+      <h1 class="header"></h1>
+      <form class="todoForm"></form>
+      <div class="todoList"></div>
+      <div class="todoCount"></div>
+    `
+    
+    const $header = this.$target.querySelector('.header');
+    const $todoForm = this.$target.querySelector('.todoForm');
+    const $todoList = this.$target.querySelector('.todoList');
+    const $todoCount = this.$target.querySelector('.todoCount');
+
+    new Header({ 
+      $target : $header, 
+      initialState : "Simple Todo",
+    });
+    
+    new TodoForm({
+      $target : $todoForm, 
+      props : {
+        onsubmit : this.addTodo.bind(this),
+      }
+    });
+
+    this.todoList = new TodoList({
+      $target :$todoList, 
+      initialState: getTodosFromStorage(), 
+      props:{
+        toggleTodo : toggleTodo.bind(this),
+        deleteTodo : deleteTodo.bind(this),
+    }});
+
+    this.todoCount = new TodoCount({
+      $target : $todoCount, 
+      initialState : getTodosFromStorage(),
+    })
   }
 }
