@@ -12,7 +12,7 @@ export default class TodoForm extends Component{
   }
 
   addEvent(){
-    const {onsubmit} = this.props;
+    const {onSubmit} = this.props;
     this.$target.addEventListener('submit',e => {
       e.preventDefault();
       const $todo = this.$target.querySelector('input[name=todoForm]');
@@ -20,7 +20,7 @@ export default class TodoForm extends Component{
 
       if(text.length > 1){
         $todo.value = '';
-        onsubmit(text);
+        onSubmit(text);
       }
     })
   }

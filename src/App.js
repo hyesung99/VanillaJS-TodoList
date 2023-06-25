@@ -1,12 +1,12 @@
 import Component from "./component/Component.js";
 import { Header, TodoForm, TodoList, TodoCount } from './component/index.js';
 import todoStorage from "./storage/todoStorage.js";
-import generateUniqueId from "./utils/generateId.js";
-
+import TodoItem from "./domain/todoItem.js";
 export default class App extends Component{
 
   addTodo(text){
-    const newTodoList = [...this.todoList.state, {text, isCompleted:false, id:generateUniqueId()}];
+    const newTodo = new TodoItem(text);
+    const newTodoList = [...this.todoList.state, newTodo];
     this.setTodosToStorage(newTodoList);
     this.todoList.setState(newTodoList);
     this.updateTodoCount();
@@ -47,7 +47,7 @@ export default class App extends Component{
   }
 
   getTodoCount(){
-    const todoData = this.getTodosFromStorage()
+    const todoData = todoStorage.getItem()
     const totalTodos = todoData.length;
     const completedTodos = todoData.filter((todo) => todo.isCompleted === true).length
     return { totalTodos, completedTodos}
@@ -84,7 +84,7 @@ export default class App extends Component{
     new TodoForm({
       $target : $todoForm, 
       props : {
-        onsubmit : this.addTodo.bind(this),
+        onSubmit : this.addTodo.bind(this),
       }
     });
 
