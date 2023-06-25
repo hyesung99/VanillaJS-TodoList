@@ -6,7 +6,7 @@ export default class Component{
   state;
   props;
 
-  constructor({$target, initialState ,props}){
+  constructor({$target, initialState={} ,props={}}){
     this.$target = $target;
     this.props = props;
     this.state = initialState;
