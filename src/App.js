@@ -6,7 +6,7 @@ import generateUniqueId from "./utils/generateId.js";
 export default class App extends Component{
   
   render(){
-    const {onsubmit, handleStorageChange, toggleTodo, deleteTodo} = this;
+    const {toggleTodo, deleteTodo} = this;
     this.$target.innerHTML = 
     `
       <h1 class="header"></h1>
@@ -20,25 +20,33 @@ export default class App extends Component{
     const $todoList = this.$target.querySelector('.todoList');
     const $todoCount = this.$target.querySelector('.todoCount');
 
-    new Header( $header, null, {
-      headerText : 'Simple todos'
+    new Header({ 
+      $target : $header, 
+      initialState : "Simple Todo",
     });
     
-    new TodoForm($todoForm, null, {
-      onsubmit : this.addTodo.bind(this),
+    new TodoForm({
+      $target : $todoForm, 
+      props : {
+        onsubmit : this.addTodo.bind(this),
+      }
     });
 
-    this.todoList = new TodoList($todoList, getTodosFromStorage(), {
-      toggleTodo : toggleTodo.bind(this),
-      deleteTodo : deleteTodo.bind(this),
-    });
+    this.todoList = new TodoList({
+      $target :$todoList, 
+      initialState:getTodosFromStorage(), 
+      props:{
+        toggleTodo : toggleTodo.bind(this),
+        deleteTodo : deleteTodo.bind(this),
+    }});
 
-    this.todoCount = new TodoCount($todoCount, getTodosFromStorage(), {});
+    this.todoCount = new TodoCount({
+      $target : $todoCount, 
+      initialState : getTodosFromStorage(),
+    })
   }
-
   addTodo(text){
     const newTodoList = [...this.todoList.state, {text, isCompleted:false, id:generateUniqueId()}];
-    console.log(newTodoList);
     setTodosToStorage(newTodoList);
     this.todoList.setState(newTodoList);
     this.updateTodoCount();
@@ -46,7 +54,6 @@ export default class App extends Component{
 
   toggleTodo(id){
     const targetTodo = this.todoList.state.find(todo => todo.id === id)
-
     if (targetTodo) {
       targetTodo.isCompleted = !targetTodo.isCompleted 
     }

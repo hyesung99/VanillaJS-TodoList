@@ -6,12 +6,9 @@ export default class Component{
   state;
   props;
 
-  constructor($target, initialState ,props){
+  constructor({$target, initialState ,props}){
     this.$target = $target;
     this.props = props;
-    if (initialState === undefined) {
-      throw new Error('초기 상태(initialState)는 반드시 정의되어야 합니다.(null가능)');
-    }
     this.state = initialState;
     this.render();
     this.addEvent();

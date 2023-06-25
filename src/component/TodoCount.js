@@ -1,7 +1,7 @@
 import Component from "./Component.js";
 import { getTodosFromStorage } from "../actions/todoAction.js";
 
-export default class TodoForm extends Component{
+export default class TodoCount extends Component{
   render(){
     const wholeCount = this.state.length;
     const completedCount = this.state.filter((todo) => todo.isCompleted === true).length

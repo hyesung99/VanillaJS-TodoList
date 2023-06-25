@@ -10,13 +10,9 @@ export const setItem = (key, value) => {
 
 export const getItem = (key, defaultValue) => {
   try {
-    const storedValue = storage.getItem(key)
+    const storedValue = storage.getItem(key);
+    return storedValue ? JSON.parse(storedValue) : defaultValue;
 
-    if(storedValue){
-      return JSON.parse(storedValue)
-    }
-
-    return defaultValue
   } catch(e) {
     console.log(e.message)
     return defaultValue
