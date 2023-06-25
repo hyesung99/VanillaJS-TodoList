@@ -15,7 +15,7 @@ export default class TodoForm extends Component{
     const {onSubmit} = this.props;
     this.$target.addEventListener('submit',e => {
       e.preventDefault();
-      const $todo = this.$target.querySelector('input[name=todoForm]');
+      const $todo = this.$target.todoForm;
       const text = $todo.value;
 
       if(text.length > 1){
