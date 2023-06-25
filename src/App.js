@@ -22,14 +22,14 @@ export default class App extends Component{
     this.updateTodoCount();
   }
   
-  deleteTodo(id){
-    const targetIndex = this.todoList.state.findIndex(todo => todo.id === id);
-    if (targetIndex !== -1) {
-      this.todoList.state.splice(targetIndex, 1);
+  deleteTodo(targetId){
+    const newState = this.todoList.state.filter((todo) => todo.id !== targetId);
+    if(newState.length !== this.todoList.state){
+      this.setTodosToStorage(newState);
+      this.todoList.setState(newState);
+      this.updateTodoCount();
     }
-    this.setTodosToStorage(this.todoList.state);
-    this.todoList.setState(this.todoList.state);
-    this.updateTodoCount();
+  
   }
   
   updateTodoCount(){
