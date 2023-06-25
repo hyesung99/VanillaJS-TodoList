@@ -33,17 +33,24 @@ export default class App extends Component{
   }
   
   updateTodoCount(){
-    this.todoCount.setState(this.getTodosFromStorage());
+    this.todoCount.setState(this.getTodoCount());
   }
 
+  
   getTodosFromStorage(){
     try{
-      console.log(todoStorage.getItem())
       return todoStorage.getItem();
     } 
     catch(e) {
       alert(`${e.message}\n local storage에서 todo를 가져오는데 실패했습니다.`)
     }
+  }
+
+  getTodoCount(){
+    const todoData = this.getTodosFromStorage()
+    const totalTodos = todoData.length;
+    const completedTodos = todoData.filter((todo) => todo.isCompleted === true).length
+    return { totalTodos, completedTodos}
   }
   
   setTodosToStorage(value){
@@ -55,7 +62,7 @@ export default class App extends Component{
   }
 
   render(){
-    const {toggleTodo, deleteTodo, getTodosFromStorage, setTodosToStorage} = this;
+    const {toggleTodo, deleteTodo, getTodosFromStorage, getTodoCount} = this;
     this.$target.innerHTML = 
     `
       <h1 class="header"></h1>
@@ -91,7 +98,7 @@ export default class App extends Component{
 
     this.todoCount = new TodoCount({
       $target : $todoCount, 
-      initialState : getTodosFromStorage(),
+      initialState : getTodoCount(),
     })
   }
 }
