@@ -1,12 +1,12 @@
 import Component from "./component/Component.js";
 import { Header, TodoForm, TodoList, TodoCount } from './component/index.js';
-import { setTodosToStorage,getTodosFromStorage } from "./actions/todoAction.js";
+import todoStorage from "./storage/todoStorage.js";
 import generateUniqueId from "./utils/generateId.js";
 
 export default class App extends Component{
   
   render(){
-    const {toggleTodo, deleteTodo} = this;
+    const {toggleTodo, deleteTodo, updateTodoCount, getTodosFromStorage, setTodosToStorage} = this;
     this.$target.innerHTML = 
     `
       <h1 class="header"></h1>
@@ -34,7 +34,7 @@ export default class App extends Component{
 
     this.todoList = new TodoList({
       $target :$todoList, 
-      initialState:getTodosFromStorage(), 
+      initialState: getTodosFromStorage(), 
       props:{
         toggleTodo : toggleTodo.bind(this),
         deleteTodo : deleteTodo.bind(this),
@@ -45,9 +45,10 @@ export default class App extends Component{
       initialState : getTodosFromStorage(),
     })
   }
+
   addTodo(text){
     const newTodoList = [...this.todoList.state, {text, isCompleted:false, id:generateUniqueId()}];
-    setTodosToStorage(newTodoList);
+    this.setTodosToStorage(newTodoList);
     this.todoList.setState(newTodoList);
     this.updateTodoCount();
   }
@@ -57,22 +58,40 @@ export default class App extends Component{
     if (targetTodo) {
       targetTodo.isCompleted = !targetTodo.isCompleted 
     }
-    setTodosToStorage(this.todoList.state);
+    this.setTodosToStorage(this.todoList.state);
     this.todoList.setState(this.todoList.state);
     this.updateTodoCount();
   }
   
-  updateTodoCount(){
-    this.todoCount.setState(getTodosFromStorage());
-  }
   deleteTodo(id){
     const targetIndex = this.todoList.state.findIndex(todo => todo.id === id);
     if (targetIndex !== -1) {
       this.todoList.state.splice(targetIndex, 1);
     }
-    setTodosToStorage(this.todoList.state);
+    this.setTodosToStorage(this.todoList.state);
     this.todoList.setState(this.todoList.state);
     this.updateTodoCount();
   }
+  
+  updateTodoCount(){
+    this.todoCount.setState(this.getTodosFromStorage());
+  }
 
+  getTodosFromStorage(){
+    try{
+      console.log(todoStorage.getItem())
+      return todoStorage.getItem();
+    } 
+    catch(e) {
+      alert(`${e.message}\n local storage에서 todo를 가져오는데 실패했습니다.`)
+    }
+  }
+  
+  setTodosToStorage(value){
+    try{
+      return todoStorage.setItem(JSON.stringify(value));
+    } catch {
+      alert(`${e.message}\n local storage에 todo를 저장하는데 실패했습니다.`)
+    }
+  }
 }

@@ -1,5 +1,4 @@
 import Component from "./Component.js";
-import { getTodosFromStorage } from "../actions/todoAction.js";
 
 export default class TodoCount extends Component{
   render(){

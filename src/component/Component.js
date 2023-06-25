@@ -23,9 +23,6 @@ export default class Component{
   }
 
   setState(newState){
-    if(typeof this.state === newState){
-      throw new Error('변경할 state는 이전의 state와 type이 같아야합니다.')
-    }
     this.state = newState;
     this.render();
   }
