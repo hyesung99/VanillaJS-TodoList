@@ -13,6 +13,7 @@ export default class TodoForm extends Component{
 
   addEvent(){
     const {onSubmit} = this.props;
+    console.log(onSubmit)
     this.$target.addEventListener('submit',e => {
       e.preventDefault();
       const $todo = this.$target.todoForm;
