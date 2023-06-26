@@ -2,10 +2,11 @@ import Component from "./component/Component.js";
 import { Header, TodoForm, TodoList, TodoCount } from './component/index.js';
 import todoStorage from "./storage/todoStorage.js";
 import TodoItem from "./domain/todoItem.js";
+import TodoCountItem from "./domain/todoCountItem.js";
 export default class App extends Component{
 
   addTodo(text){
-    const newTodo = new TodoItem(text);
+    const newTodo = new TodoItem({text: text,isCompleted : false})
     const newTodoList = [...this.todoList.state, newTodo];
     this.setTodosToStorage(newTodoList);
     this.todoList.setState(newTodoList);
@@ -33,9 +34,17 @@ export default class App extends Component{
   }
   
   updateTodoCount(){
-    this.todoCount.setState(this.getTodoCount());
+    this.todoCount.setState(this.getTodoCount(), TodoCountItem);
   }
-
+  
+  getTodoCount(){
+    const todoData = todoStorage.getItem();
+    const newTodoCount = new TodoCountItem({
+      totalTodoCount : todoData.length,
+      completedTodoCount: todoData.filter((todo) => todo.isCompleted === true).length
+    })
+    return newTodoCount
+  }
   
   getTodosFromStorage(){
     try{
@@ -46,12 +55,6 @@ export default class App extends Component{
     }
   }
 
-  getTodoCount(){
-    const todoData = todoStorage.getItem()
-    const totalTodos = todoData.length;
-    const completedTodos = todoData.filter((todo) => todo.isCompleted === true).length
-    return { totalTodos, completedTodos}
-  }
   
   setTodosToStorage(value){
     try{
