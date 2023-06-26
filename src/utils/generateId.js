@@ -1,5 +1,5 @@
 export default function generateUniqueId() {
-  const timestamp = Date.now().toString(36);
-  const randomString = Math.random().toString(36).slice(2, 9);
-  return `${timestamp}-${randomString}`;
+  const timestamp = Date.now().toString();
+  const randomString = Math.random().toString().slice(0, 5);
+  return `${timestamp}${randomString}`;
 }

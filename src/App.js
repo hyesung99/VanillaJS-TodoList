@@ -13,7 +13,7 @@ export default class App extends Component{
   }
 
   toggleTodo(id){
-    const targetTodo = this.todoList.state.find(todo => todo.id === id)
+    const targetTodo = this.todoList.state.find(todo => "todo-item-"+todo.id === id)
     if (targetTodo) {
       targetTodo.isCompleted = !targetTodo.isCompleted 
     }
@@ -23,7 +23,7 @@ export default class App extends Component{
   }
   
   deleteTodo(targetId){
-    const newState = this.todoList.state.filter((todo) => todo.id !== targetId);
+    const newState = this.todoList.state.filter((todo) => "todo-item-"+todo.id !== targetId);
     if(newState.length !== this.todoList.state){
       this.setTodosToStorage(newState);
       this.todoList.setState(newState);

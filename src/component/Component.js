@@ -26,4 +26,10 @@ export default class Component{
     this.state = newState;
     this.render();
   }
+
+  addEventDelegation(action, selector, callback){
+    this.$target.addEventListener(action, ({target}) => {
+      
+    })
+  }
 }
