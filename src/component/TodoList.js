@@ -21,15 +21,6 @@ export default class TodoList extends Component{
 
   addEvent(){
     const {toggleTodo, deleteTodo} = this.props;
-    
-    this.$target.addEventListener('click', ({target}) => {
-      if(target.closest("span")){
-        toggleTodo(target.closest(".todo").getAttribute('id'));
-      }
-      if(target.closest("button")){
-        deleteTodo(target.closest(".todo").getAttribute('id'));
-      }
-    })
 
     this.addEventDelegation('click', 'span', ({target}) => toggleTodo(target.closest(".todo").getAttribute('id')));
     this.addEventDelegation('click', 'button', ({target}) => deleteTodo(target.closest(".todo").getAttribute('id')));

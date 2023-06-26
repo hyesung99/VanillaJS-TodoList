@@ -27,9 +27,11 @@ export default class Component{
     this.render();
   }
 
-  addEventDelegation(action, selector, callback){
-    this.$target.addEventListener(action, ({target}) => {
-      
+  addEventDelegation(action, tag, callback){
+    this.$target.addEventListener(action, (event) => {
+      if(event.target.closest(`${tag}`)){
+        callback(event)
+      }
     })
   }
 }
