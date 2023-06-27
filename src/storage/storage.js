@@ -12,6 +12,6 @@ export default class Storage{
   }
 
   setItem(value){
-    this.storage.setItem(this.key,value)
+    this.storage.setItem(this.key,JSON.stringify(value))
   }
 }

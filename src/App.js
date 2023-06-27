@@ -1,71 +1,15 @@
 import Component from "./component/Component.js";
 import { Header, TodoForm, TodoList, TodoCount } from './component/index.js';
-import todoStorage from "./storage/todoStorage.js";
-import TodoItem from "./domain/todoItem.js";
-import TodoCountItem from "./domain/todoCountItem.js";
+import { TodoItemsHandler, TodoCountItemHandler } from "./service/index.js";
+// import todoStorage from "./storage/todoStorage.js";
+// import TodoCountItem from "./domain/todoCountItem.js";
+
 export default class App extends Component{
-
-  addTodo(text){
-    const newTodo = new TodoItem({text: text,isCompleted : false})
-    const newTodoList = [...this.todoList.state, newTodo];
-    this.setTodosToStorage(newTodoList);
-    this.todoList.setState(newTodoList);
-    this.updateTodoCount();
-  }
-
-  toggleTodo(id){
-    const targetTodo = this.todoList.state.find(todo => "todo-item-"+todo.id === id)
-    if (targetTodo) {
-      targetTodo.isCompleted = !targetTodo.isCompleted 
-    }
-    this.setTodosToStorage(this.todoList.state);
-    this.todoList.setState(this.todoList.state);
-    this.updateTodoCount();
-  }
   
-  deleteTodo(targetId){
-    const newState = this.todoList.state.filter((todo) => "todo-item-"+todo.id !== targetId);
-    if(newState.length !== this.todoList.state){
-      this.setTodosToStorage(newState);
-      this.todoList.setState(newState);
-      this.updateTodoCount();
-    }
-  
-  }
-  
-  updateTodoCount(){
-    this.todoCount.setState(this.getTodoCount(), TodoCountItem);
-  }
-  
-  getTodoCount(){
-    const todoData = todoStorage.getItem();
-    const newTodoCount = new TodoCountItem({
-      totalTodoCount : todoData.length,
-      completedTodoCount: todoData.filter((todo) => todo.isCompleted === true).length
-    })
-    return newTodoCount
-  }
-  
-  getTodosFromStorage(){
-    try{
-      return todoStorage.getItem();
-    } 
-    catch(e) {
-      alert(`${e.message}\n local storage에서 todo를 가져오는데 실패했습니다.`)
-    }
-  }
-
-  
-  setTodosToStorage(value){
-    try{
-      return todoStorage.setItem(JSON.stringify(value));
-    } catch {
-      alert(`${e.message}\n local storage에 todo를 저장하는데 실패했습니다.`)
-    }
-  }
-
   render(){
-    const {toggleTodo, deleteTodo, getTodosFromStorage, getTodoCount, addTodo} = this;
+    const todoItemsHandler = new TodoItemsHandler()
+    const todoCountItemsHandler = new TodoCountItemHandler()
+    console.log(todoCountItemsHandler)
     this.$target.innerHTML = 
     `
       <h1 class="header"></h1>
@@ -87,21 +31,37 @@ export default class App extends Component{
     new TodoForm({
       $target : $todoForm, 
       props : {
-        onSubmit : addTodo.bind(this),
+        onSubmit : (text) => {
+          todoItemsHandler.addTodo({text})
+          todoCountItemsHandler.updateTodoCount()
+          this.todoList.setState(todoItemsHandler.todoItems)
+          this.todoCount.setState(todoCountItemsHandler.todoCount)
+        }
       }
     });
-
+    
+    
     this.todoList = new TodoList({
       $target :$todoList, 
-      initialState: getTodosFromStorage(), 
+      initialState: todoItemsHandler.todoItems,
       props:{
-        toggleTodo : toggleTodo.bind(this),
-        deleteTodo : deleteTodo.bind(this),
+        toggleTodo : (targetId) => {
+          todoItemsHandler.toggleTodo({targetId})
+          todoCountItemsHandler.updateTodoCount()
+          this.todoList.setState(todoItemsHandler.todoItems)
+          this.todoCount.setState(todoCountItemsHandler.todoCount)
+        },
+        deleteTodo : (targetId) => {
+          todoItemsHandler.deleteTodo({targetId})
+          todoCountItemsHandler.updateTodoCount()
+          this.todoList.setState(todoItemsHandler.todoItems)
+          this.todoCount.setState(todoCountItemsHandler.todoCount)
+        },
     }});
 
     this.todoCount = new TodoCount({
       $target : $todoCount, 
-      initialState : getTodoCount(),
+      initialState : todoCountItemsHandler.todoCount,
     })
   }
 }

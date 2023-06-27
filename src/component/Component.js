@@ -19,7 +19,7 @@ export default class Component{
 
   }
 
-  setState(newState, stateType){
+  setState(newState){
     this.state = newState;
     this.render();
   }
